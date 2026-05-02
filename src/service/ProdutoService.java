@@ -1,5 +1,7 @@
 package service;
 
+import exceptions.ListaDeProdutosVaziaException;
+import exceptions.ProdutoNaoEncontradoException;
 import model.Produto;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class ProdutoService {
 
         System.out.println("---------------------------------------");
         if (listaDeProdutos.isEmpty()) {
-            System.out.println("Lista de produtos vazia!");
+            throw new ListaDeProdutosVaziaException("Lista de produtos vázia.");
         } else {
 
                 int contador = 1;
@@ -69,12 +71,16 @@ public class ProdutoService {
         if (removido) {
             System.out.println("Produto removido com sucesso");
         } else {
-            System.out.println("Produto não encontrado!");
+            throw new ProdutoNaoEncontradoException("O produto '" + nome + "' não está cadastrado.");
         }
         System.out.println("---------------------------------------");
     }
 
     public void limparLista() {
-        listaDeProdutos.clear();
+        if (!listaDeProdutos.isEmpty()) {
+            listaDeProdutos.clear();
+        } else {
+            throw new ListaDeProdutosVaziaException("A lista já está vazia");
+        }
     }
 }

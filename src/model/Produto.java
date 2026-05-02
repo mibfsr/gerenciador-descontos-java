@@ -1,18 +1,21 @@
 package model;
 
-public class Produto {
+import exceptions.DescontoInvalidoException;
+import exceptions.NomeInvalidoException;
+import exceptions.PrecoInvalidoException;
+
+public abstract class Produto {
     private String nome;
     private double precoBase;
     static private double descontoGlobal;
 
     public Produto(String nome, double precoBase) {
-        this.nome = nome;
-        this.precoBase = precoBase;
+        setNome(nome);
+        setPrecoBase(precoBase);
     }
 
     public double calcularPrecoFinal() {
-        System.out.println("Desconto aplicado com sucesso");
-        return precoBase - (precoBase * 0.1);
+        return precoBase - (precoBase * descontoGlobal);
     }
 
     public String getNome() {
@@ -20,7 +23,11 @@ public class Produto {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        if (nome == null || nome.isBlank()) {
+            throw new NomeInvalidoException("Digite um nome válido");
+        } else {
+            this.nome = nome;
+        }
     }
 
     public double getPrecoBase() {
@@ -28,7 +35,11 @@ public class Produto {
     }
 
     public void setPrecoBase(double precoBase) {
-        this.precoBase = precoBase;
+        if (precoBase < 0) {
+            throw new PrecoInvalidoException("O preço do produto inválido.");
+        } else {
+            this.precoBase = precoBase;
+        }
     }
 
     public static double getDescontoGlobal() {
@@ -36,6 +47,11 @@ public class Produto {
     }
 
     public static void setDescontoGlobal(double descontoGlobal) {
-        Produto.descontoGlobal = descontoGlobal;
+        if (descontoGlobal < 0) {
+            throw new DescontoInvalidoException("Desconto inválido.");
+        } else {
+            Produto.descontoGlobal = descontoGlobal;
+        }
+
     }
 }
